@@ -51,41 +51,7 @@
 		  htmls = {};
 
 		  $(document).ready(function(){
-		    if(window.location.hash){
-    		    hash = $('[data-page ='+window.location.hash.substr(1)+']');
-    		    if(hash.length == 1){
-    		        hash.addClass("active");
-    		    } else {
-		            $('[data-page = 1]').addClass("active");
-    		    }
-		    } else {
-		        $('[data-page = 1]').addClass("active");
-		    }
-
-			var hides = $('[data-hide]');
-			var active = $('[data-page].active').data("page");
-			jQuery.each(hides, function(){
-				htmls[$(this).data('hide')] = $(this).html();
-				if($(this).data('hide') != active){
-					$(this).hide();
-					$(this).html("");
-				}
-			});
-
-			$('[data-page]').on('click', function(){
-				$('[data-page].active').removeClass("active");
-				$(this).addClass("active");
-				var hides = $('[data-hide]');
-				var active = $(this).data("page");
-				jQuery.each(hides, function(){
-					$(this).hide();
-					$(this).html("");
-					if($(this).data('hide') == active){
-						$(this).show();
-						$(this).html(htmls[$(this).data('hide')]);
-					}
-				});
-			});
+			$('[data-page={{html}}]').addClass("active");
 		  });
 		</script>
 	</head>
@@ -96,14 +62,14 @@
 			  <a class="navbar-brand">Project</a>
 			</div>
 			<ul class="nav navbar-nav">
-			  <li data-page="1"><a>Data</a></li>
-			  <li data-page="2"><a>Logs</a></li>
+			  <li data-html="Data"><a href="/?html=Data">Data</a></li>
+			  <li data-html="Upload"><a href="/?html=Upload">Upload CSV</a></li>
+			  <li data-html="Logs"><a href="/?html=Logs">Logs</a></li>
 			</ul>
 		  </div>
 		</nav>
 
 	    <img src="/static/background.jpg" id="bg" alt="" />
-		<div data-hide="1">{% include 'navbar/data.html'%}</div>
-		<div data-hide="2">{% include 'navbar/logs.html'%}</div>
+		<div>{% include 'navbar/'+html+'.html'%}</div>
 	</body>
 </html>

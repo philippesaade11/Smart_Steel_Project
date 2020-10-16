@@ -3,6 +3,7 @@ from .models import Temperature, Log
 from flask import request, jsonify, render_template, json
 import datetime
 import time
+import pandas as pd
 
 @app.before_request
 def log_request():
@@ -23,7 +24,8 @@ def log_request():
 #Home
 @app.route('/', methods = ['GET'])
 def home():
-    return render_template('index.html')
+    html = request.args.get('html', default = "Data")
+    return render_template('index.html', html=html)
 
 def allowed_file(filename):
     return '.' in filename and filename.split(".")[-1] == "csv"
@@ -57,7 +59,7 @@ def upload():
                 return error("Wrong format")
 
             #Upload to Database
-            data[db_columns].to_sql('Temperature', db.engine)
+            data[db_columns].to_sql('Temperature', db.engine, if_exists='append', index=False)
             return '1'
     return render_template('index.html')
 
@@ -65,13 +67,68 @@ def upload():
 @app.route('/getData', methods = ['POST'])
 def getData():
     if request.method == 'POST':
-        fromtime = request.form.get('fromtime', 0)
-        totime = request.form.get('totime', 999999999999)
-        page = request.form.get('page', 0)
+        fromdate = request.form.get('fromdate', default = 0)
+        todate = request.form.get('todate', default = 999999999999)
+        page = request.form.get('page', default = 0)
 
-        data = Temperature.query.filter(Temperature.timestamp >= fromtime, Temperature.timestamp <= totime).paginate(page, 50, False)
-        data = rows2dict(data)
-        return jsonify(data)
+        fromdate = float(fromdate) if not ifNone(fromdate) else 0
+        todate = float(todate) if not ifNone(todate) else 999999999999
+        page = int(page) if not ifNone(page) else 0
+
+        paginator = Temperature.query.filter(Temperature.timestamp >= fromdate, Temperature.timestamp <= todate).paginate(page, 20, False)
+        data = rows2dict(paginator.items)
+        return jsonify({'data': data, 'pages': paginator.pages, 'page': paginator.page})
+    return render_template('index.html')
+
+#Get Data
+@app.route('/getLogs', methods = ['POST'])
+def getLogs():
+    if request.method == 'POST':
+        fromdate = request.form.get('fromdate', default = 0)
+        todate = request.form.get('todate', default = 999999999999)
+        page = request.form.get('page', default = 0)
+
+        fromdate = float(fromdate) if not ifNone(fromdate) else 0
+        todate = float(todate) if not ifNone(todate) else 999999999999
+        page = int(page) if not ifNone(page) else 0
+
+        paginator = Log.query.filter(Log.timestamp >= fromdate, Log.timestamp <= todate).paginate(page, 20, False)
+        data = rows2dict(paginator.items)
+        return jsonify({'data': data, 'pages': paginator.pages, 'page': paginator.page})
+    return render_template('index.html')
+
+#Get Row
+@app.route('/getRow/<int:id>', methods = ['POST'])
+def getRow(id):
+    if request.method == 'POST':
+        row = Temperature.query.filter(Temperature.id == id).first()
+        row = rows2dict([row])[0]
+        return jsonify(row)
+    return render_template('index.html')
+
+#Get Row
+@app.route('/deleteRow/<int:id>', methods = ['POST'])
+def deleteRow(id):
+    if request.method == 'POST':
+        Temperature.query.filter(Temperature.id == id).delete()
+        db.session.commit()
+        return "1"
+    return render_template('index.html')
+
+#Change Row
+@app.route('/changeRow/<int:id>', methods = ['POST'])
+def changeRow(id):
+    if request.method == 'POST':
+        temperature = float(request.form['temperature'])
+        duration = float(request.form['duration'])
+        timestamp = float(request.form['timestamp'])
+
+        row = Temperature.query.filter(Temperature.id == id).first()
+        row.temperature = temperature
+        row.duration = duration
+        row.timestamp = timestamp
+        db.session.commit()
+        return "1"
     return render_template('index.html')
 
 def rows2dict(data, exclude_cols=[]):
