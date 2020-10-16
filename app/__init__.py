@@ -13,3 +13,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/database.db'
 db = SQLAlchemy(app)
 
 from app.routes import *
+from app.models import *

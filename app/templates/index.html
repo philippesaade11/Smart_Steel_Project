@@ -11,7 +11,6 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-selection/1.2.0/d3-selection.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-		<script src="/static/script.js"></script>
 		<style>
 			a {
 				cursor: pointer;
@@ -49,7 +48,6 @@
 			}
 		</style>
 		<script>
-		  checkLogin();
 		  htmls = {};
 
 		  $(document).ready(function(){
@@ -95,22 +93,17 @@
 		<nav class="navbar navbar-inverse" style="z-index: 1;">
 		  <div class="container-fluid">
 			<div class="navbar-header">
-			  <a class="navbar-brand">Lehfed Country</a>
+			  <a class="navbar-brand">Project</a>
 			</div>
 			<ul class="nav navbar-nav">
-			  <li data-page="1"><a>Add Reservation</a></li>
-			  <li data-page="2"><a>View Reservations</a></li>
-			  <li data-page="3"><a>Add Costs</a></li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-			  <li onclick="logout()"><a><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+			  <li data-page="1"><a>Data</a></li>
+			  <li data-page="2"><a>Logs</a></li>
 			</ul>
 		  </div>
 		</nav>
 
 	    <img src="/static/background.jpg" id="bg" alt="" />
-		<div data-hide="1">{% include 'navbar/addReservation.html'%}</div>
-		<div data-hide="2">{% include 'navbar/viewReservation.html'%}</div>
-		<div data-hide="3">{% include 'navbar/addCosts.html'%}</div>
+		<div data-hide="1">{% include 'navbar/data.html'%}</div>
+		<div data-hide="2">{% include 'navbar/logs.html'%}</div>
 	</body>
 </html>

@@ -3,7 +3,7 @@ from . import db
 class Temperature(db.Model):
     __tablename__ = 'Temperature'
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.String(20))
+    timestamp = db.Column(db.Float)
     temperature = db.Column(db.Float)
     duration = db.Column(db.Float)
 
