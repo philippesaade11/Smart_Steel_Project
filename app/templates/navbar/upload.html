@@ -5,9 +5,28 @@
         <meta content="utf-8" http-equiv="encoding">
 		<script>
 			$(function(){
-
-			});
-			}
+				$("#uploadForm").on('submit', function(event){
+					event.preventDefault();
+					Fdata = new FormData($("#uploadForm")[0]);
+					$.ajax({
+						type: "POST",
+						url: "/upload",
+						data: Fdata,
+						cache: false,
+					    processData: false,
+					    contentType: false,
+						success: function(data)
+						{
+							window.location = "/?html=Data"
+						},
+						error: function(data){
+							if(data.responseJSON != null){
+								alert(data.responseJSON.error);
+							}
+						}
+					});
+				});
+			})
 		</script>
 	</head>
 	<body>
@@ -16,7 +35,7 @@
 				<div class="panel-heading">
 					<h4>Upload CSV</h4>
 				</div>
-				<form method="post" enctype="multipart/form-data" action="/upload">
+				<form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload">
 					<div class="panel-body">
 						<div class="form-group">
 							<input type="file" class="form-control" name="file" style="height: 100%" required>

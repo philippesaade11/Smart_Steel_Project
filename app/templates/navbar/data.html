@@ -46,7 +46,8 @@
 					data: {
 						"fromdate": fromdate,
 						"todate": todate,
-						"page": page
+						"page": page,
+						"page_size": 20
 					},
 					success: function(data){
 						var html = ""
@@ -58,7 +59,14 @@
 							openrow($(this).data("id"));
 						});
 
-						fix_pages(data["page"], data["pages"])
+						fix_pages(data["page"], data["pages"]);
+
+						loadchart({
+							"fromdate": fromdate,
+							"todate": todate,
+							"page": 1,
+							"page_size": 20*(data["pages"]+1)
+						});
 					},
 					error: function(data){
 						if(data.responseJSON != null){
@@ -191,6 +199,52 @@
 					}
 				});
 			}
+
+			function loadchart(filter){
+				$.ajax({
+					url: "/getData",
+					type: "POST",
+					data: filter,
+					success: function(data){
+						xdata = data["data"].map(x => (x["timestamp"]*1000))
+						ydata = data["data"].map(x => x["temperature"])
+						var ctx = document.getElementById('timechart').getContext('2d');
+						var myChart = new Chart(ctx, {
+							type: 'line',
+							data: {
+								labels: xdata,
+								datasets: [{
+									label: 'Temperature',
+									data: ydata,
+									borderColor: "#337ab7"
+								}]
+							},
+							options: {
+								responsive: true,
+								scales: {
+									xAxes: [{
+										type: 'time',
+									}]
+								},
+								pan: {
+									enabled: true,
+									mode: 'x',
+								},
+								zoom: {
+									drag: false,
+									enabled: true,
+									mode: 'x',
+								},
+							}
+						});
+					},
+					error: function(data){
+						if(data.responseJSON != null){
+							alert(data.responseJSON.error);
+						}
+					}
+				});
+			}
 		</script>
 	</head>
 	<body>
@@ -227,7 +281,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="container">
 						<table class="table table-hover">
 							<thead>
 							<tr>
@@ -244,6 +298,10 @@
 							<ul class="pagination" id="pagination" style="display: flex; justify-content: center">
 							</ul>
 						</nav>
+					</div>
+					<hr/>
+					<div class="container">
+						<canvas id="timechart"></canvas>
 					</div>
 				</div>
 			</div>

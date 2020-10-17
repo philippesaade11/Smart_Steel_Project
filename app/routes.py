@@ -59,7 +59,12 @@ def upload():
                 return error("Wrong format")
 
             #Upload to Database
-            data[db_columns].to_sql('Temperature', db.engine, if_exists='append', index=False)
+            try:
+                data[db_columns].to_sql('Temperature', db.engine, if_exists='append', index=False)
+            except:
+                db_columns.remove("id")
+                data[db_columns].to_sql('Temperature', db.engine, if_exists='append', index=False)
+
             return '1'
     return render_template('index.html')
 
@@ -70,12 +75,14 @@ def getData():
         fromdate = request.form.get('fromdate', default = 0)
         todate = request.form.get('todate', default = 999999999999)
         page = request.form.get('page', default = 0)
+        page_size = request.form.get('page_size', default = 20)
 
         fromdate = float(fromdate) if not ifNone(fromdate) else 0
         todate = float(todate) if not ifNone(todate) else 999999999999
         page = int(page) if not ifNone(page) else 0
+        page_size = int(page_size) if not ifNone(page_size) else 20
 
-        paginator = Temperature.query.filter(Temperature.timestamp >= fromdate, Temperature.timestamp <= todate).paginate(page, 20, False)
+        paginator = Temperature.query.filter(Temperature.timestamp >= fromdate, Temperature.timestamp <= todate).order_by(Temperature.timestamp).paginate(page, page_size, False)
         data = rows2dict(paginator.items)
         return jsonify({'data': data, 'pages': paginator.pages, 'page': paginator.page})
     return render_template('index.html')
@@ -87,12 +94,14 @@ def getLogs():
         fromdate = request.form.get('fromdate', default = 0)
         todate = request.form.get('todate', default = 999999999999)
         page = request.form.get('page', default = 0)
+        page_size = request.form.get('page_size', default = 20)
 
         fromdate = float(fromdate) if not ifNone(fromdate) else 0
         todate = float(todate) if not ifNone(todate) else 999999999999
         page = int(page) if not ifNone(page) else 0
+        page_size = int(page_size) if not ifNone(page_size) else 20
 
-        paginator = Log.query.filter(Log.timestamp >= fromdate, Log.timestamp <= todate).paginate(page, 20, False)
+        paginator = Log.query.filter(Log.timestamp >= fromdate, Log.timestamp <= todate).order_by(Log.timestamp).paginate(page, page_size, False)
         data = rows2dict(paginator.items)
         return jsonify({'data': data, 'pages': paginator.pages, 'page': paginator.page})
     return render_template('index.html')
@@ -134,14 +143,15 @@ def changeRow(id):
 def rows2dict(data, exclude_cols=[]):
     return [{col.name: getattr(x, col.name) for col in x.__table__.columns if col not in exclude_cols} for x in data]
 
-def ifNone(str):
-    return (str==None or str == "" or str.lower() == "nan" or str.lower() == "none" or str.lower() == "null")
+def ifNone(a):
+    a = str(a)
+    return (a==None or a == "" or a.lower() == "nan" or a.lower() == "none" or a.lower() == "null")
 
 def error(msg):
     return jsonify({'error': msg}), 401
 
-def strtobool(str):
-    if(str.lower() in ["true", "t", 1, "1", "on"]):
+def strtobool(a):
+    if(a.lower() in ["true", "t", 1, "1", "on"]):
         return True
     return False
     
