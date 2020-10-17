@@ -27,12 +27,15 @@ There's a tab bar on top of the page (Data, Upload CSV, Logs) each tab will chan
       The rows are fetched from the database 20 as a time using pagination.
       
       Pressing a row in the table opens a module containg the data of the specific row. You can then change the data or delete the current row.
+      
       ![ScreenShot](/snapshots/change-popup.PNG)
       
       Pressing the top right + button will open another module that lets you add a new row to the table.
+      
       ![ScreenShot](/snapshots/add-popup.PNG)
       
       Below the table, we have a chart that plot the temperture over the timestamp. The chart is zoomable and pannable.
+      
       ![ScreenShot](/snapshots/chart.PNG)
   
 Technologies Used:
