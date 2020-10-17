@@ -11,6 +11,8 @@ If everything is working fine you will see the home page as such:
 
 ![ScreenShot](/snapshots/home.PNG)
 
+At first the table would be empty so go to the Upload CSV tab and upload your data to populate the database.
+
 How to Use:
 ------
 There's a tab bar on top of the page (Data, Upload CSV, Logs) each tab will change the contain of the page:
@@ -34,7 +36,7 @@ There's a tab bar on top of the page (Data, Upload CSV, Logs) each tab will chan
       
       ![ScreenShot](/snapshots/add-popup.PNG)
       
-      Below the table, we have a chart that plot the temperture over the timestamp. The chart is zoomable and pannable.
+      Below the table, we have a chart that plot the temperture over the timestamp. The chart is zoomable and pannable. Pressing points in the charts also opens the change pop-up.
       
       ![ScreenShot](/snapshots/chart.PNG)
   

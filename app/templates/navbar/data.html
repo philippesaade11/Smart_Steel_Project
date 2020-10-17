@@ -236,6 +236,7 @@
 			}
 
 			function loadchart(filter){
+				$("#timechartcontainer").html('<canvas id="timechart"></canvas>');
 				$.ajax({
 					url: "/getData",
 					type: "POST",
@@ -349,7 +350,7 @@
 						</nav>
 					</div>
 					<hr/>
-					<div class="container">
+					<div class="container" id="timechartcontainer">
 						<canvas id="timechart"></canvas>
 					</div>
 				</div>
