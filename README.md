@@ -8,6 +8,7 @@ The Database is already provided as a .db file in the app folder.
 
 The app uses the port 8000, after running the script, open https://localhost:8000 on your browser.
 If everything is working fine you will see the home page as such:
+
 ![ScreenShot](/snapshots/home.PNG)
 
 How to Use:
@@ -37,13 +38,13 @@ There's a tab bar on top of the page (Data, Upload CSV, Logs) each tab will chan
 Technologies Used:
 ------
 For the Backend:
-    - Flask
-    - SQLite 3 (Database)
-    - SQLAlchemy (for Database Manipulation)
-    - Pandas (for reading CSV and add to Database)
+  - Flask
+  - SQLite 3 (Database)
+  - SQLAlchemy (for Database Manipulation)
+  - Pandas (for reading CSV and add to Database)
 
 For the Frontend:
-    - Bootstrap 3 (for the design)
-    - JQuery
-    - ChartJS (for the chart)
-    - DateTimePicker/MomentJS (for the date filter)
+  - Bootstrap 3 (for the design)
+  - JQuery
+  - ChartJS (for the chart)
+  - DateTimePicker/MomentJS (for the date filter)
