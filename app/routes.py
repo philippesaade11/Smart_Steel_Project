@@ -140,6 +140,20 @@ def changeRow(id):
         return "1"
     return render_template('index.html')
 
+#Add Row
+@app.route('/addRow', methods = ['POST'])
+def addRow():
+    if request.method == 'POST':
+        temperature = float(request.form['temperature'])
+        duration = float(request.form['duration'])
+        timestamp = float(request.form['timestamp'])
+
+        row = Temperature(temperature = temperature, duration = duration, timestamp = timestamp)
+        db.session.add(row)
+        db.session.commit()
+        return "1"
+    return render_template('index.html')
+
 def rows2dict(data, exclude_cols=[]):
     return [{col.name: getattr(x, col.name) for col in x.__table__.columns if col not in exclude_cols} for x in data]
 
